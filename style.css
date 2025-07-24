@@ -1,0 +1,244 @@
+/* --- Professional Theme & Layout --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #111827; /* Dark background for the main container */
+    color: #d1d5db;
+}
+
+#main-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#sidebar {
+    width: 30%;
+    max-width: 450px;
+    min-width: 380px;
+    background-color: #1f2937; /* Dark sidebar */
+    padding: 1.5rem;
+    overflow-y: auto;
+    border-right: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+#sidebar-header h4 {
+    color: #ffffff;
+    font-weight: 700;
+}
+#sidebar-header .subtitle {
+    color: #9ca3af;
+}
+
+#sidebar .card {
+    border-radius: 0.75rem;
+    background-color: #374151; /* Darker cards */
+    border: 1px solid #4b5563;
+    flex-shrink: 0;
+}
+
+.card-header {
+    font-weight: 600;
+    background-color: #4b5563;
+    color: #e5e7eb;
+    border-bottom: 1px solid #4b5563;
+}
+.card-body {
+    color: #d1d5db;
+}
+
+/* Dashboard Stat Colors */
+.stat-color-new { color: #f87171; }
+.stat-color-investigating { color: #fbbf24; }
+.stat-color-cleaned { color: #4ade80; }
+
+/* Text colors for specific elements inside cards */
+.card-body small.text-muted {
+    color: white !important; /* Force white text */
+}
+
+/* Chart container ensures consistent sizing */
+.chart-container {
+    position: relative;
+    height: 220px;
+}
+
+/* --- Map & Controls --- */
+#map-container {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    background-color: #e2e8f0;
+    cursor: crosshair;
+}
+
+/* --- Custom Icons --- */
+.custom-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    /* IMPORTANT: Increase font-size for better visibility of icons */
+    font-size: 16px; /* Changed from 14px */
+    width: 32px !important; /* Changed from 30px */
+    height: 32px !important; /* Changed from 30px */
+}
+
+/* Default dumping icon style */
+.dumping-icon { 
+    background-color: #6b7280; /* Neutral dark grey */ 
+    color: white;
+}
+
+/* Style for 'Under Investigation' markers */
+.investigating-icon {
+    background-color: #f59e0b; /* Orange for investigating */
+    filter: blur(0.5px);
+    color: white;
+}
+
+/* Updated color for Hospital icon - using a distinct color from the provided image */
+.hospital-icon { background-color: #00878A; } /* Teal-ish color from image_b71599.png */
+/* Updated color for Tourist Spot icon - using a distinct color from the provided image */
+.tourist-icon { background-color: #8C564B; } /* Brownish color from image_b71599.png */
+
+/* New icons for additional GeoJSON layers with colors from provided image */
+.lake-icon { background-color: #6ED2DD; } /* Light Blue from provided image */
+.river-icon { background-color: #6ED2DD; } /* Light Blue for rivers, as per latest request */
+.school-icon { background-color: #8DA94C; } /* Olive green from provided image */
+.primary-school-icon { background-color: #5D7A1F; } /* Darker olive green from provided image */
+/* Office Icon */
+.office-icon { background-color: #60A5FA; } /* Blue for offices */
+
+
+/* --- Map Legend --- */
+#map-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(31, 41, 55, 0.9);
+    color: #e5e7eb;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    line-height: 1.6;
+    max-width: 250px;
+    border: 1px solid #4b5563;
+}
+#map-legend h4 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #4b5563;
+    padding-bottom: 5px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+.legend-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    border-radius: 50%;
+    color: white;
+}
+
+/* --- Live Location Button (now in leaflet-bottom leaflet-left container) --- */
+/* These classes are applied by Leaflet to position the container */
+.leaflet-bottom.leaflet-left #locate-btn {
+    margin: 10px; /* Add some margin from the corner */
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    display: flex; /* Make it a flex container for icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
+
+/* --- Toast Notification --- */
+#toast-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    background-color: #1e293b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    text-align: center;
+    min-width: 250px;
+}
+#toast-container.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Admin popup actions styling */
+.admin-popup-actions {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #4b5563;
+}
+.admin-popup-actions .input-group-sm label {
+    font-size: 0.8rem;
+}
+.admin-popup-actions .form-control-sm,
+.admin-popup-actions .form-select-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* --- Loading Spinner with text (Loading Overlay) --- */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker, more opaque overlay */
+    z-index: 1500; /* Above map, below modals/toasts */
+    display: flex; /* Use flex for centering */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Stack spinner and text vertically */
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+}
+.loading-overlay .spinner-content {
+    background-color: #1f2937; /* Dark background for spinner box */
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 10px;
+}
