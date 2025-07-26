@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
     // MAKE SURE THIS IS THE LATEST DEPLOYMENT URL FOR YOUR Code.gs
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8pyFP4JMG6Q3QqjHZPHWtWvp3O1qdEmjPhLr7i_xxwFvLQ_BiUyvHOsvx4zSH3FIw/exec'; // Your deployed web app URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJP6dcr0HBuL7h-NLQc2TyLWVcWNd5ALVvubr_GLcHl9kbLHYxHtmgYzNdS3uFbXYB/exec'; // Your deployed web app URL
 
     // --- Global State ---
     let timeChart, typeChart;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const adminLoginSubmitBtn = document.getElementById('adminLoginSubmitBtn');
     const startReportBtn = document.getElementById('startReportBtn');
     const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
-    // const locateBtn = document.getElementById('locate-btn'); // No longer directly get button ref, it's dynamic
+    // const locateBtn = document.getElementById('locate-btn'); // REMOVED: No longer directly get button ref, it's created dynamically
 
     // References for new modal input fields
     const dsdNameInput = document.getElementById('dsdName');
@@ -152,13 +152,12 @@ document.addEventListener('DOMContentLoaded', function () {
             html: '<i class="fa-solid fa-trash-can"></i>',
         });
         
-        // Display DSD, Office Name, and Phone in popup
         let popupContent = `<strong>${report.wtype || 'N/A'} (${report.wsize || 'N/A'})</strong><br>
             <span class="badge bg-secondary">${report.status || 'N/A'}</span>
             <p class="my-1">${report.description || 'No description provided.'}</p>
             <small class="text-muted">DSD: ${report.dsdname || 'N/A'}</small><br>
             <small class="text-muted">Office: ${report.responsibleoffice || 'N/A'}</small><br>
-            <small class="text-muted">Phone: ${report.responsibleofficephone || 'N/A'}</small>`; // Added phone here
+            <small class="text-muted">Phone: ${report.responsibleofficephone || 'N/A'}</small>`;
 
         if (report.risklevel) {
             let riskBadgeClass = '';
@@ -422,8 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
         showToast("Click on the map to place your new report.");
     });
 
-    // Removed locateBtn.addEventListener here, it will be added when control is created.
-
+    // map.on('click') remains async because it uses await new Promise
     map.on('click', async e => {
         showLoadingSpinner(); // Show loading spinner immediately
         
@@ -490,8 +488,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     const distanceToOffice = turf.distance(clickedPoint, nearestOffice, { units: 'kilometers' });
 
                     if (distanceToOffice <= searchRadiusKm) {
-                        officeName = nearestOffice.properties.title || 'N/A'; // Assuming 'title' is the office name
-                        // FIX: Ensure phone is always a string, even if null/undefined in GeoJSON
+                        officeName = nearestOffice.properties.title || 'N/A';
+                        // Ensures phone is a string, even if null/undefined in GeoJSON.
+                        // The formatting for Google Sheet is handled in code.gs.
                         officePhone = String(nearestOffice.properties.phone || ''); 
                     } else {
                         console.log(`No office found within ${searchRadiusKm}km radius.`); // DEBUG
@@ -710,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Add the custom control to the map
-        map.addControl(new LocateControl({ position: 'bottomleft' })); // Position it bottom-left
+        map.addControl(new LocateControl({ position: 'bottomleft' }));
 
 
         const fetchGeoJSON = async (url, style = null, pointToLayer = null) => {
@@ -745,15 +744,15 @@ document.addEventListener('DOMContentLoaded', function () {
             primarySchoolData,
             officeData
         ] = await Promise.all([
-            fetchGeoJSON('nwp_boundary.geojson', { color: "#1e40af", weight: 3, opacity: 0.7, fill: false, interactive: false }),
-            fetchGeoJSON('DSD_N.geojson', { color: "#64748b", weight: 1, opacity: 0.5, fillOpacity: 0.1, interactive: false }),
-            fetchGeoJSON('government_hospitals.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon hospital-icon', html: '<i class="fa-solid fa-kit-medical"></i>' }) })),
-            fetchGeoJSON('tourist_spots.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon tourist-icon', html: '<i class="fa-solid fa-star"></i>' }) })),
-            fetchGeoJSON('Lake.geojson', { color: "#6ED2DD", weight: 2, fillOpacity: 0.6 }),
-            fetchGeoJSON('River.geojson', { color: "#6ED2DD", weight: 2 }),
-            fetchGeoJSON('schools.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon school-icon', html: '<i class="fa-solid fa-school"></i>' }) })),
-            fetchGeoJSON('Primary_Schools.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon primary-school-icon', html: '<i class="fa-solid fa-school-flag"></i>' }) })),
-            fetchGeoJSON('Office.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon office-icon', html: '<i class="fa-solid fa-building"></i>' }) }))
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/nwp_boundary.geojson', { color: "#1e40af", weight: 3, opacity: 0.7, fill: false, interactive: false }),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/DSD_N.geojson', { color: "#64748b", weight: 1, opacity: 0.5, fillOpacity: 0.1, interactive: false }),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/government_hospitals.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon hospital-icon', html: '<i class="fa-solid fa-kit-medical"></i>' }) })),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/tourist_spots.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon tourist-icon', html: '<i class="fa-solid fa-star"></i>' }) })),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/Lake.geojson', { color: "#6ED2DD", weight: 2, fillOpacity: 0.6 }),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/River.geojson', { color: "#6ED2DD", weight: 2 }),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/schools.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon school-icon', html: '<i class="fa-solid fa-school"></i>' }) })),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/Primary_Schools.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon primary-school-icon', html: '<i class="fa-solid fa-school-flag"></i>' }) })),
+            fetchGeoJSON('https://raw.githubusercontent.com/Ruchiruwijerathna/Illegal-Dumping-Sites/refs/heads/main/Office.geojson', null, (f,l) => L.marker(l, { icon: L.divIcon({ className: 'custom-icon office-icon', html: '<i class="fa-solid fa-building"></i>' }) }))
         ]);
 
         if (boundaryData) {
@@ -840,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             photourl: report.photourl,
                             status: report.status,
                             authority: report.authority, // Keep this for now for backwards compatibility if needed
-                            dsdname: report.dsdname, // Fetch new fields if they exist in sheet
+                            dsdname: report.dsdname,
                             responsibleoffice: report.responsibleoffice,
                             responsibleofficephone: report.responsibleofficephone,
                             risklevel: report.risklevel || "Low",
